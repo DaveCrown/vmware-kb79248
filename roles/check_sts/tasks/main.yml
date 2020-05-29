@@ -5,7 +5,7 @@
     dest: "{{ ansible_user_dir }}/checksts.py"
     mode: '0644'
 
-- name: run the checksts
+- name: run the checksts.py script
   shell:
     cmd: python {{ ansible_user_dir }}/checksts.py
   register: check_sts_results

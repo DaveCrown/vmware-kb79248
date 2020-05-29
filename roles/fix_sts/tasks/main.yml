@@ -28,17 +28,19 @@
   delegate_to: localhost
   run_once: yes
 
-- name: run vmware's fixsts.shs script
+- name: run vmware's fixsts.sh script
   shell:
     cmd:  "{{ ansible_user_dir }}/fixsts.sh"
   when: env_vmware_password == ""
   environment:
     VMWARE_PASSWORD: vmware_password_prompt.user_input
 
-- name: run vmware's fixsts.shs script
+- name: run vmware's fixsts.sh script
   shell:
     cmd:  "{{ ansible_user_dir }}/fixsts.sh"
   when: env_vmware_password != ""
+  environment:
+    VMWARE_PASSWORD: "{{ env_vmware_password }}"
 
 - name: fetch log file
   fetch:
