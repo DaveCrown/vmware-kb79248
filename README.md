@@ -13,8 +13,8 @@ A play to download and call VMware support's scripts to check and fix expiring s
 
 > ### ***<span style="color:red">Warning!</span>***
 >- Mucking with sts signing certs can break your environment. Have backups and snapshots before begin
->- You're running code downloaded from the Internet, read the code to get the warm and fuzzies
->- Until vmware support fixes the `fixsts.sh` script, A patched script is included that looks in the VCENTER_PASSWORD environment variable on your workstation or your Ansible Tower server.
+>- You're running code downloaded from the Internet, read the code first to get the warm and fuzzies. 
+>- Until vmware support fixes the `fixsts.sh` script, a patched script is included that looks in the VCENTER_PASSWORD environment variable on your workstation or your Ansible Tower server. I dont claim this as my own, its from VMware. 
 >- Tower or locally, the `administrator@vsphere.local` is passed around and unset in an environment variable. There is a possibility of it getting leaked. This is know behavior for ansible anyway.
 >- Beyond this point, there be dragons. Proceed at your own risk.
 
@@ -50,8 +50,16 @@ Once Vagrant and a hypervisor has been installed, run `vagrant up`. Once the vmn
 
 ## Configuration
 You need to define your vcenter environment(s) in the `vcenters.ini` file. A block for SSO domain, and all the PSC's and vCenters need to be listed by fdqn. Because the scripts only need to be ran on one server with a PSC role, but all servers in the SSO domain need to restarted in order by role, there is an sts_role setting that need to be set. If the SSO  domain only has a single server, use the `sts_role=all` setting. If the domain is more complex, use the sts_role as shown below. 
->#### Note
-> Only Set one `sts_role=master` per SSO domain.  
+### File Format
+```ini
+[sso_domain]
+<appliance fdqn> sts_role=<sts_role>  
+<next appliance fdqn> sts_role=<sts_role>
+...
+[next sso domain]
+...
+```
+#### `sts_role` settings
 
 | sts_role | when to use |
 | --- | --- |
@@ -59,6 +67,9 @@ You need to define your vcenter environment(s) in the `vcenters.ini` file. A blo
 | master | the Vcenter with embedded PSC or external PSC to run the cert scripts on |
 | psc | external PSC |
 | vcenter | vcenter server regardless of PSC |
+>#### Note
+> Only Set one `sts_role=master` per SSO domain.  
+
 
 #### Sample file
 ```ini
