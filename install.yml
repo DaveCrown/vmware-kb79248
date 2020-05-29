@@ -48,4 +48,5 @@
     - name: install PowerCLI
       shell:
         executable: /usr/bin/pwsh
-        cmd: If (-not (Get-InstalledModule vmware.powercli -ErrorAction silentlycontinue)){ Install-Module vmware.powercli -Confirm:$False -Force }
+        cmd: "if (-not (Get-InstalledModule vmware.powercli -ErrorAction silentlycontinue)){ Install-Module vmware.powercli -Confirm:$False -Force }"
+      become: no

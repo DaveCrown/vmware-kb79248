@@ -1,2 +1,8 @@
 ---
+restart_order:
+  - all
+  - master
+  - psc
+  - vcenter
+
 ansible_ssh_user: root

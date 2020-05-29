@@ -45,23 +45,14 @@
       - run_fix | default(false)
       - sts_role == 'all' or sts_role == 'master'
 
+
     - name: restart services on all/master sts
       include_role:
         name: restart_services
       when:
        - run_fix | default(false)
-       - sts_role == 'all' or sts_role == 'master'
+       - sts_role == restart_group
+      with_items: "{{ restart_order }}"
+      loop_control:
+        loop_var: restart_group
 
-    - name: restart services psc's
-      include_role:
-        name: restart_services
-      when:
-       - run_fix | default(false)
-       - sts_role == 'psc'
-
-    - name: restart services on vcenters
-      include_role:
-        name: restart_services
-      when:
-       - run_fix | default(false)
-       - sts_role == 'vcenter'
