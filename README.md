@@ -109,7 +109,7 @@ Run `ansible-playbook -e "fix_sts=True"`. If you use `sso_domain` option, that w
 | `-e "sso_domain=<blah>` | target only one SSO domain, as defined in `vcenters.ini` |
 
 ### Ansible Tower
-To use the play in Tower, create a vcenter credental with a username of `administrator@vsphere.local` and the password. Attach the credential to the job template as normally. You will also need you SSH credentials attached as well. Tower will unpack the encrypted value from the data, and the password into `VMWARE_PASSWORD` env variable. 
+To use the play in Tower, create a vcenter credential with a username of `administrator@vsphere.local` and the password. Attach the credential to the job template as normally. You will also need you SSH credentials attached as well. Tower will unpack the encrypted value from the data, and the password into `VMWARE_PASSWORD` env variable. 
 
 ## Reference
 [vmware kb 79248](https://kb.vmware.com/s/article/79248)  
@@ -121,4 +121,4 @@ To use the play in Tower, create a vcenter credental with a username of `adminis
 ## Legal
 I am in no away affiliated with VMware, nor did I write the scripts. I just an ansible play to run them. Use this as your own peril with good backups and snapshots. Don't blame me if this burns down your center environment, you were warned. I take no responsibility or liability.
 
-Trademarks and Copyright are propertys of their respective owners.
+Trademarks and Copyright are properties of their respective owners.
