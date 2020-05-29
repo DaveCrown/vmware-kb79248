@@ -1,0 +1,31 @@
+
+# Created by https://www.gitignore.io/api/ansible,vagrant,visualstudiocode
+# Edit at https://www.gitignore.io/?templates=ansible,vagrant,visualstudiocode
+
+### Ansible ###
+*.retry
+
+### Vagrant ###
+# General
+.vagrant/*
+
+# Log files (if you are creating logs in debug mode, uncomment this)
+# *.log
+
+### Vagrant Patch ###
+*.box
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+
+# End of https://www.gitignore.io/api/ansible,vagrant,visualstudiocode
+
+logs/

@@ -1,0 +1,3 @@
+---
+env_vmware_password: "{{ lookup('env','VMWARE_PASSWORD') | default(None, true ) }}"
+use_patched: yes

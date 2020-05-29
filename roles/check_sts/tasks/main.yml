@@ -1,0 +1,12 @@
+---
+- name: get check script
+  get_url: 
+    url: "{{ script_urls.checksts }}"
+    dest: "{{ ansible_user_dir }}/checksts.py"
+    mode: '0644'
+
+- name: run the checksts
+  shell:
+    cmd: python {{ ansible_user_dir }}/checksts.py
+  register: check_sts_results
+  changed_when: False
