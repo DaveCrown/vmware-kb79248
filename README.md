@@ -16,6 +16,7 @@ A play to download and call VMware support's scripts to check and fix expiring s
 >- You're running code downloaded from the Internet, read the code first to get the warm and fuzzies. 
 >- Until vmware support fixes the `fixsts.sh` script, a patched script is included that looks in the VCENTER_PASSWORD environment variable on your workstation or your Ansible Tower server. I dont claim this as my own, its from VMware. 
 >- Tower or locally, the `administrator@vsphere.local` is passed around and unset in an environment variable. There is a possibility of it getting leaked. This is know behavior for ansible anyway.
+>- I'm suggesting you generate and copy ssh keys to your vc. Understand the risks and mitigation before you do this.
 >- Beyond this point, there be dragons. Proceed at your own risk.
 
 >#### Notes
@@ -92,6 +93,7 @@ Please make sure your appliances are ansible ready first.
 >- bash set as default shell on all vcenter appliances, with `chsh -s /bin/bash`. See [vmware KB 2107727]((https://kb.vmware.com/s/article/2107727))  
 >- `vcenter.ini` file properly configured  
 >#### Optional, but nice  
+>- If you don't have an ssh keypair, create a set with `ssh-keygen`. Please Understand the risks first.
 >- copy ssh keys, if you have them, with `ssh-copy-id root@<your fdqn> -o PreferredAuthentications=password -o PubkeyAuthentication=no`
 ### Run in check mode
 Just a simple `ansible-playbook apply_kb.yml` is all you need.
