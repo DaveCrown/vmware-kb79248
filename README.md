@@ -113,7 +113,7 @@ To use the play in Tower, create a vcenter credential with a username of `admini
 
 ## Reference
 [vmware kb 79248](https://kb.vmware.com/s/article/79248)  
-[vmware kb 76719](https://kb.vmware.com/s/article/79248)  
+[vmware kb 76719](https://kb.vmware.com/s/article/79719)  
 [vmware kb 2107727](https://kb.vmware.com/s/article/2107727)  
 [Ansible Installation Guide](https://docs.ansible.com/ansible/latest/installation_guide/index.html)  
 [Vagrant Install Guide](https://www.vagrantup.com/intro/getting-started/install.html)  
