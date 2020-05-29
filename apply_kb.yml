@@ -31,11 +31,11 @@
         var: check_sts_results.stdout_lines
         verbosity: 1
 
-    - name: set call script varible
+    - name: set run_script varible
       set_fact:
         run_fix: yes
       when:
-        - check_sts_results.stdout is regex("[1-9]\d*\ VALID\ CERTS")
+        - check_sts_results.stdout is regex("[1-9]\d*\ EXPIRED\ CERTS")
         - fix_sts | default(False)
 
     - name: Run fixsts.sh script
