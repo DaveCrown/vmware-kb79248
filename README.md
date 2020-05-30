@@ -101,7 +101,7 @@ Please make sure your appliances are ansible ready first.
 >- `vcenters.ini` file properly configured  
 >#### Optional, but nice  
 >- If you don't have an ssh keypair, create a set with `ssh-keygen`. Please Understand the risks first.
->- copy ssh keys, if you have them, with `ssh-copy-id root@<your fdqn> -o PreferredAuthentications=password -o PubkeyAuthentication=no`
+>- Copy your ssh keys, if you have them, with `ssh-copy-id root@<your fdqn> -o PreferredAuthentications=password -o PubkeyAuthentication=no`
 ### Run in check mode
 #### No sshkeys
 Just a simple `ansible-playbook -k apply_kb.yml` is all you need. The flag `-k` will instruct Ansible to prompt for the password.
