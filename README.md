@@ -1,6 +1,6 @@
 # vmware-kb79248 sts certificate repair
 ## Description
-A play to download and call VMware support's scripts to check and fix expiring sts certificates on vmware vcenter appliances. If you want the knowledge base articles, see the [Reference Section](#Reference) 
+A play to download and call VMware support's scripts to check, and if necessary fix, expiring sts certificates on vmware vcenter appliances. If you want the knowledge base articles, see the [Reference Section](#Reference) 
 ### The Play's workflow 
 1. Copy the `checksts.py` script from the KB to the designated appliance
 2. Runs the script, and checks the output for expired certs
@@ -19,7 +19,6 @@ A play to download and call VMware support's scripts to check and fix expiring s
 >- Tower or locally, the `administrator@vsphere.local` is passed around and unset in an environment variable. There is a possibility of it getting leaked. While this is standard operating procedure for Tower, you need to be aware of this.  
 >- I'm suggesting you generate and copy ssh keys to your vc. Understand the risks and mitigation before you do this.
 >- Beyond this point, there be dragons. Proceed at your own risk.
-
 >#### Notes
 > This play only works with the VCSA appliance. Windows based vCenters are not supported.  
 
@@ -32,6 +31,7 @@ A play to download and call VMware support's scripts to check and fix expiring s
 - git
 - a text editor of your choice
 - the `administrator@vsphere.local` password
+- the `root` os passwords for all the vcsa's you want to use this with
 ### To use the Vagrant file
 - Vagrant
 - One of following Virtualization Technologies:
@@ -49,13 +49,14 @@ Start with cloning this to your local workstation with `git clone https://github
 Use your favorite package manager. See the [Ansible Installation Guide](https://docs.ansible.com/ansible/latest/installation_guide/index.html)
 
 ### Windows
-Either Spin up a vm, or use the attached vagrant file to spin a Centos 7 environment. To install Vagrant, see the [Vagrant Install Guide](https://www.vagrantup.com/intro/getting-started/install.html). You'll also need one of the aforementioned hypervisors.
+Either spin up a vm, or use the attached vagrant file to spin a Centos 7 environment. The vagrant fil will call the included `install.yml` play to configure the environment with Ansible, Git, and a few other goodies. To install Vagrant, see the [Vagrant Install Guide](https://www.vagrantup.com/intro/getting-started/install.html). You'll also need one of the aforementioned hypervisors.
 
 ### Vagrant
 The included Vagrant file will spin up a Centos 7 VM, and use the `install.yml` play to install all the required software, copy all the file in this repository over to the `/vagrant` directory. Once Vagrant and a hypervisor has been installed, run `vagrant up`. Once the vmn is built, run `vagrant ssh` to log into the vm. Once in, `cd /vagrant` to get to the files.
 
 ## Configuration
-You need to define your vcenter environment(s) in the `vcenters.ini` file. A block for each SSO domain, with all the PSC's and vCenters need to be listed by fdqn with an `sts_role=<role>`. Because the scripts only need to be ran on one server with a PSC role, but all servers in the SSO domain need to restarted in order by role, there is an sts_role setting that need to be set. If the SSO  domain only has a single server, use the `sts_role=all` setting. If the domain is more complex, use the sts_role as shown below. You can (and should), put multiple SSO Domains into one file.
+You need to define your vcenter environment(s) in the `vcenters.ini` file. It consists of a block for each SSO domain, with all the PSC's and vCenters need to be listed by fdqn with an `sts_role=<role>`. Because the scripts only need to be ran on one server with a PSC role, but all servers in the SSO domain need to restarted in order by role, there is an sts_role setting that need to be set. If the SSO  domain only has a single server, use the `sts_role=all` setting. If the domain is more complex, use the sts_role as shown below. You can (and should), put multiple SSO Domains into one file.
+
 ### File Format
 ```ini
 [sso_domain]
@@ -95,14 +96,19 @@ prod_psc_west.corp.net sts_role=psc
 ### Before you begin
 Please make sure your appliances are ansible ready first.
 >#### Prerequisites  
->- **Backups and Snapshots of all the appliances**
 >- ssh enabled on all vcenter appliances
 >- bash set as default shell on all vcenter appliances, with `chsh -s /bin/bash`. See [vmware KB 2107727]((https://kb.vmware.com/s/article/2107727)). Steps 1 through 5 need to be completed. I like to leave `/bin/bash` as my shell.  
+>> #### Required
+>- ***Backups!***
+>- ssh enabled on all vcenter appliances
+>- this git repo cloned to your workstation or as a project in tower.
+>- bash set as default shell on all vcenter appliances, with `chsh -s /bin/bash`. See [vmware KB 2107727]((https://kb.vmware.com/s/article/2107727))  
 >- `vcenters.ini` file properly configured  
->#### Optional, but nice  
+>>#### Optional, but nice  
 >- If you don't have an ssh keypair, create a set with `ssh-keygen`. Please Understand the risks first.
 >- Copy your ssh keys, if you have them, with `ssh-copy-id root@<your fdqn> -o PreferredAuthentications=password -o PubkeyAuthentication=no`
 ### Run in check mode
+
 #### No sshkeys
 Just a simple `ansible-playbook -k apply_kb.yml` is all you need. The flag `-k` will instruct Ansible to prompt for the password.
 #### With ssh keys
@@ -122,6 +128,9 @@ If you want/need to be prompted for the root ssh password, use the `-k` as shown
 ### Ansible Tower
 To use the play in Tower, create a vcenter credential with a username of `administrator@vsphere.local` and the password. Attach the credential to the job template as normally. You will also need you SSH credentials attached as well. Tower will unpack the encrypted value from the data, and the password into `VMWARE_PASSWORD` env variable. The `fix_sts` flag gets set in the `Extra Variables` block. The vcenters.ini file is your inventory file for the project.
 
+## Todo
+> use block-in-file to patch vmware's `fixsts.sh` script instead of distributing a patched copy
+
 ## Reference
 [vmware kb 79248](https://kb.vmware.com/s/article/79248)  
 [vmware kb 76719](https://kb.vmware.com/s/article/76719)  
@@ -132,4 +141,4 @@ To use the play in Tower, create a vcenter credential with a username of `admini
 ## Legal
 I am in no away affiliated with VMware, nor did I write the scripts. I just an ansible play to run them. Use this as your own peril with good backups and snapshots. Don't blame me if this burns down your center environment, you were warned. I take no responsibility or liability.
 
-Trademarks and Copyright are properties of their respective owners.
+Trademarks and Copyrights are properties of their respective owners.
