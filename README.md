@@ -128,9 +128,6 @@ If you want/need to be prompted for the root ssh password, use the `-k` as shown
 ### Ansible Tower
 To use the play in Tower, create a vcenter credential with a username of `administrator@vsphere.local` and the password. Attach the credential to the job template as normally. You will also need you SSH credentials attached as well. Tower will unpack the encrypted value from the data, and the password into `VMWARE_PASSWORD` env variable. The `fix_sts` flag gets set in the `Extra Variables` block. The vcenters.ini file is your inventory file for the project.
 
-## Todo
-> use block-in-file to patch vmware's `fixsts.sh` script instead of distributing a patched copy
-
 ## Reference
 [vmware kb 79248](https://kb.vmware.com/s/article/79248)  
 [vmware kb 76719](https://kb.vmware.com/s/article/76719)  
