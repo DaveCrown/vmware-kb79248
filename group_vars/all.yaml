@@ -5,6 +5,4 @@ restart_order:
   - psc
   - vcenter
 
-use_patched: True
-
 ansible_ssh_user: root

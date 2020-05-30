@@ -41,11 +41,9 @@
     - name: Run fixsts.sh script
       include_role:
         name: fix_sts
-      when: true
-      # when: 
-      # - run_fix | default(false)
-      # - sts_role == 'all' or sts_role == 'master'
-
+      when: 
+      - run_fix | default(false)
+      - sts_role == 'all' or sts_role == 'master'
 
     - name: restart services on all/master sts
       include_role:
