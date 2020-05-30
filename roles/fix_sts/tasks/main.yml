@@ -11,13 +11,27 @@
     url: "{{ script_urls.fixsts }}"
     dest: "{{ ansible_user_dir }}/fixsts.sh"
     mode: '0744'
-  when: not use_patched | default(False)
 
-- name: copy patched fixsts.sh script
-  copy:
-    src: files/patched_fixsts.sh
-    dest: "{{ ansible_user_dir }}/fixsts.sh"
-    mode: '0744'
+- name: apply if block to env patch to fixsts script
+  blockinfile:
+    path: "{{ ansible_user_dir }}/fixsts.sh"
+    marker: '# {mark ANSIBLE MANAGED BLOCK A}'
+    state: present
+    block: |
+      if [ -n "$VMWARE_PASSWORD" ]
+      then
+      DOMAINPASSWORD="$VMWARE_PASSWORD"
+      else
+    insertbefore: "Enter password for administrator"
+  when: use_patched | default(False)
+
+- name: apply fi to if block to env patch to fixsts script
+  blockinfile:
+    path: "{{ ansible_user_dir }}/fixsts.sh"
+    marker: '# {mark ANSIBLE MANAGED BLOCK B}'
+    state: present
+    block: fi
+    insertafter: "Enter password for administrator"
   when: use_patched | default(False)
 
 - name: make log directory
@@ -46,3 +60,4 @@
   fetch:
     src: /tmp/vmware-fixsts/fix_sts_cert.log
     dest: logs
+  when: false
