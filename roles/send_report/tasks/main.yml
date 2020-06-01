@@ -15,6 +15,6 @@
     to: "{{ send_to }}"
     host: "{{ smtp_server }}"
     subject: "STS Cert expiration report {{ ansible_date_time.date }}"
-    body: "{{ lookup('template', 'email.j2') }}"
+    body: "{{ lookup('template', 'email.j2') }}{{ lookup('file', report_name ) }}"
     attach: "{{ report_name }}"
   when: delivery == 'email'
