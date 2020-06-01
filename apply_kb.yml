@@ -40,6 +40,7 @@
       set_fact:
         run_fix: yes
       when:
+        - sts_role == 'all'  or sts_role =='master'
         - check_sts_results.stdout is regex("[1-9]\d*\ EXPIRED\ CERTS")
         - fix_sts | default(False)
 
