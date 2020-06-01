@@ -7,7 +7,7 @@
 - name: combine to one report
   assemble:
     src: "{{ playbook_dir }}/work/reports/"
-    dest: "{{ playbook_dir }}/work/cert_results.{{ format_exts[format]}}" 
+    dest: "{{ report_name }}"
  
 - name: email it
   mail:
