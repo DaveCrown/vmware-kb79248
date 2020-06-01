@@ -1,0 +1,2 @@
+---
+report_name: "{{ playbook_dir }}/work/cert_results_{{ansible_date_time.date}}.{{ format_exts[format]}}"

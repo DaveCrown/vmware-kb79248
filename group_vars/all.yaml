@@ -8,3 +8,12 @@ restart_order:
 use_patched: True
 
 ansible_ssh_user: root
+
+format: text
+delivery: email
+
+format_exts:
+  text: txt
+
+format_descriptions:
+  text: plain text

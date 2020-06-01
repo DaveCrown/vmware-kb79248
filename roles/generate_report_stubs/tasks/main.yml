@@ -1,0 +1,13 @@
+---
+- name: make a local working reports dir
+  file:
+    state: directory
+    path: "{{ playbook_dir }}/work/reports"
+    recurse: yes
+  delegate_to: localhost
+
+- name: generate stub file
+  template:
+    src: "{{ format }}.j2"
+    dest: "{{ playbook_dir }}/work/reports/{{ group_names }}.{{ format_exts[format] }}"
+  delegate_to: localhost
