@@ -3,7 +3,7 @@
   file:
     state: directory
     path: "{{ playbook_dir }}/work/reports"
-    recure: yes
+    recurse: yes
   delegate_to: localhost
 
 - name: generate stub file

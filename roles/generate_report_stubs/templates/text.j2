@@ -1,7 +1,7 @@
 Group: {{ group_names }} - sts_master {{ inventory_hostname }}
--------------------------
+------------------------------------------------
 {% for line in  check_sts_results.stdout_lines%}
-{% if ('LEAF' in line) or ('ROOT' in line) or ('Certificate' in line) %}
+{% if ('LEAF' in line) or ('ROOT' in line) or ('Certificate' in line) or ('EXPIRED' in line) or ('VALID' in line)  %}
 {{ line}}
 {% endif %}
 {% endfor %}

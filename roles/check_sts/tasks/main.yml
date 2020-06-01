@@ -52,8 +52,7 @@
 - name: Output results 
   debug:
     msg: "Expired or Expiring Certs Found"
-  when: 
-    - ( expired_certs or expiring_certs )
+  when: (expired_certs | default(False) ) or (expiring_certs | default(False))
 
 - name: Output verbose results 
   debug:
@@ -70,5 +69,5 @@
   set_fact:
     run_fix: yes
   when:
-    - ( expired_certs or expiring_certs )
+    - (expired_certs | default(False) ) or (expiring_certs | default(False))
     - fix_sts | default(False)
