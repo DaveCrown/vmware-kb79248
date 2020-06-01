@@ -138,7 +138,9 @@ If you needs reports, use the `send_report=True` with `send_to=` and `smtp_serve
 | `fix_sts=True` | enable automatic repair of sts signing cert |
 | `send_report=True` | Generate a report of STS cert expirations |
 | `send_to='<email addresses>'` | a list of comma separated email addresses |
+| `send_from=<some_address>` | Optionally, send from a SMTP address your SMTP server will accept from |
 | `smpt_server=< your smtp server` | SMTP server to use |
+| `smtp_port=<some tcp port>` | Optionally, send to a port other than 25/tcp |
 
 ### Ansible Tower
 To use the play in Tower, create a vcenter credential with a username of `administrator@vsphere.local` and the password. Attach the credential to the job template as normally. You will also need you SSH credentials attached as well. Tower will unpack the encrypted value from the data, and the password into `VMWARE_PASSWORD` env variable. The `fix_sts` flag gets set in the `Extra Variables` block. The vcenters.ini file is your inventory file for the project.

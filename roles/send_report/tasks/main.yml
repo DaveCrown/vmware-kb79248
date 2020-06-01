@@ -11,10 +11,11 @@
  
 - name: email it
   mail:
-    from: "{{ ansible_user_id }}@{{ ansible_fqdn }}"
+    from: "{{ send_from | default(ansible_user_id + '@'ansible_fqdn) }}"
     to: "{{ send_to }}"
     host: "{{ smtp_server }}"
     subject: "STS Cert expiration report {{ ansible_date_time.date }}"
     body: "{{ lookup('template', 'email.j2') }}{{ lookup('file', report_name ) }}"
     attach: "{{ report_name }}"
+    port: "{{ smtp_port | default( 25 )}}"
   when: delivery == 'email'
