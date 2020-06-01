@@ -30,3 +30,45 @@
     cmd: python {{ ansible_user_dir }}/checksts.py
   register: check_sts_results
   changed_when: False
+
+- name: set expired flag
+  set_fact:
+    expired_certs: True
+  when: 
+    - check_sts_results.stdout is regex("[1-9]\d*\ EXPIRED\ CERTS")
+
+- name: set expiring flag
+  set_fact:
+    expiring_certs: True
+  when: 
+    - check_sts_results.stdout is regex("[0-1]\ \ years")
+
+- name: Output results 
+  debug:
+    msg: "STS Certs are expiring this year"
+  when: 
+    - check_sts_results.stdout is regex("1\ years")
+
+- name: Output results 
+  debug:
+    msg: "Expired or Expiring Certs Found"
+  when: 
+    - ( expired_certs or expiring_certs )
+
+- name: Output verbose results 
+  debug:
+    var: check_sts_results.stdout_lines
+    verbosity: 1
+
+- name: generate report_stubs
+  include_role:
+    name: generate_report_stubs
+  when: 
+    - send_report | default(False)
+
+- name: set run_script varible
+  set_fact:
+    run_fix: yes
+  when:
+    - ( expired_certs or expiring_certs )
+    - fix_sts | default(False)

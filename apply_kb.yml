@@ -16,34 +16,6 @@
         name: check_sts
       when: sts_role == 'all'  or sts_role =='master'
 
-    - name: Output results 
-      debug:
-        msg: "STS Certs are Valid"
-      when: 
-       - sts_role == 'all'  or sts_role =='master'
-       - check_sts_results.stdout is regex("0\ EXPIRED\ CERTS")
-
-    - name: Output results 
-      debug:
-        msg: "Expired Certs Found"
-      when: 
-        - sts_role == 'all'  or sts_role =='master'
-        - check_sts_results.stdout is regex("[1-9]\d*\ EXPIRED\ CERTS")
-
-    - name: Output verbose results 
-      debug:
-        var: check_sts_results.stdout_lines
-        verbosity: 1
-      when: sts_role == 'all'  or sts_role =='master'
-
-    - name: set run_script varible
-      set_fact:
-        run_fix: yes
-      when:
-        - sts_role == 'all'  or sts_role =='master'
-        - check_sts_results.stdout is regex("[1-9]\d*\ EXPIRED\ CERTS")
-        - fix_sts | default(False)
-
     - name: Run fixsts.sh script
       include_role:
         name: fix_sts
@@ -61,3 +33,14 @@
       loop_control:
         loop_var: restart_group
 
+---
+- hosts: "{{ localhost }}"
+  gather_facts: yes
+  become: no
+  serial: 1
+  #strategy: debug
+
+- name: send the report
+  include_role:
+    name: send_report
+  when: send_report | default(False)

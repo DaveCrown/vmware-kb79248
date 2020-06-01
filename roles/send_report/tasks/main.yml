@@ -1,0 +1,20 @@
+---
+- name: generate heater
+  template:
+    src: "header_{{ format }}.j2"
+    dest: "{{ playbook_dir }}/work/reports/00_header.{{format_exts[format]}}"
+
+- name: combine to one report
+  assemble:
+    src: "{{ playbook_dir }}/work/reports/"
+    dest: "{{ playbook_dir }}/work/cert_results.{{ format_exts[format]}}" 
+ 
+- name: email it
+  mail:
+    from: "{{ ansible_user_id }}@{{ ansible_fqdn }}"
+    to: "{{ send_to }}"
+    host: "{{ smtp_server }}"
+    subject: "STS Cert expiration report {{ ansible_date_time.date }}"
+    body: "{{ lookup('template', 'email.j2 ') }}"
+    attach: "{{ report_name }}"
+    when: delivery == 'email'

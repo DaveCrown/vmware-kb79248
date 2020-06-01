@@ -10,7 +10,9 @@ A play to download and call VMware support's scripts to check, and if necessary 
     3. Check the local workstation/Tower for `VMWARE_PASSWORD` environment varible, and if unset, prompt for the `administrator@vsphere.local` password
     4. Save a copy of the log file to `logs/<fdqn>/fix_sts_cert.log` file on your ansible workstation
     5. Restart services in order of master, PSC's, vCenters
-4. Make your life easier and you look a rock star  
+4. If you want, generate and send an email report.  
+5. Make your life easier and you look a rock star.  
+ 
 >##### Note
 > If your VCSA does not have internet access, the play will attempt to download a copy of the scripts locally into `{{ playbook_dir }}/work` and copy them up.
 
@@ -119,13 +121,24 @@ Call `ansible-playbook apply_kb.yml` without the `-k`.
 Run `ansible-playbook -e "fix_sts=True"`. If you use `sso_domain` option, that will stack like so: `ansible-playbook -e "fix_sts=True sso_domain=dev"`  
 If you want/need to be prompted for the root ssh password, use the `-k` as shown above.
 
+### Generating Reports
+If you needs reports, use the `send_report=True` with `send_to=` and `smtp_server=` options. A plain text email will be generated and sent to specified recipients via the specified smtp server.
+
 ### Options
+#### CLI 
 | option | usage |
 | --- | --- |
 | `-k` | prompt for ssh password, not needed if you have ssh keys setup | 
 | `-v` | show verbose output of `checksts.py` script |
-| `-e "sso_domain=<blah>` | target only one SSO domain, as defined in `vcenters.ini` |
-| `-e "fix_sts=True"` | enable automatic repair of sts signing cert |
+| `-e` | Use variables, see below |  
+#### Variables
+| option| usage |
+| --- | --- |
+| `sso_domain=<blah>` | target only one SSO domain, as defined in `vcenters.ini` |
+| `fix_sts=True` | enable automatic repair of sts signing cert |
+| `send_report=True` | Generate a report of STS cert expirations |
+| `send_to='<email addresses>'` | a list of comma separated email addresses |
+| `smpt_server=< your smtp server` | SMTP server to use |
 
 ### Ansible Tower
 To use the play in Tower, create a vcenter credential with a username of `administrator@vsphere.local` and the password. Attach the credential to the job template as normally. You will also need you SSH credentials attached as well. Tower will unpack the encrypted value from the data, and the password into `VMWARE_PASSWORD` env variable. The `fix_sts` flag gets set in the `Extra Variables` block. The vcenters.ini file is your inventory file for the project.
