@@ -12,6 +12,33 @@
     dest: "{{ ansible_user_dir }}/fixsts.sh"
     mode: '0744'
 
+- name: Download file from vmware
+  block:
+    - name: get check script
+      get_url: 
+        url: "{{ script_urls.checksts }}"
+        dest: "{{ ansible_user_dir }}/fixsts.sh"
+        mode: '0744'
+
+  rescue:
+    - name: make a work dir
+      file:
+        state: directory
+        path: "{{ playbook_dir }}/work"
+      delegate_to: localhost
+
+    - name: get check script
+      get_url: 
+        url: "{{ script_urls.checksts }}"
+        dest: "{{ playbook_dir }}/work/fixsts.sh"
+        mode: '0644'
+      delegate_to: localhost
+
+    - name: copy file to server
+      copy:
+        src: "{{ playbook_dir }}/work/fixsts.sh"
+        dest:  "{{ ansible_user_dir }}/fixsts.sh"
+
 - name: apply if block to env patch to fixsts script
   blockinfile:
     path: "{{ ansible_user_dir }}/fixsts.sh"
