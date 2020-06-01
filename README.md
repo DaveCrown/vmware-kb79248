@@ -11,6 +11,8 @@ A play to download and call VMware support's scripts to check, and if necessary 
     4. Save a copy of the log file to `logs/<fdqn>/fix_sts_cert.log` file on your ansible workstation
     5. Restart services in order of master, PSC's, vCenters
 4. Make your life easier and you look a rock star  
+>##### Note
+> If your VCSA does not have internet access, the play will attempt to download a copy of the scripts locally into `{{ playbook_dir }}/work` and copy them up.
 
 > ### ***<span style="color:red">Warning!</span>***
 >- Mucking with sts signing certs can break your environment. Have backups and snapshots before begin.
