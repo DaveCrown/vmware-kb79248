@@ -40,7 +40,8 @@
   serial: 1
   #strategy: debug
 
-- name: send the report
-  include_role:
-    name: send_report
-  when: send_report | default(False)
+  tasks:
+  - name: send the report
+    include_role:
+      name: send_report
+    when: send_report | default(False)
