@@ -33,7 +33,6 @@
       loop_control:
         loop_var: restart_group
 
----
 - hosts: "{{ localhost }}"
   gather_facts: yes
   become: no
@@ -41,6 +40,7 @@
   #strategy: debug
 
   tasks:
+
   - name: send the report
     include_role:
       name: send_report
