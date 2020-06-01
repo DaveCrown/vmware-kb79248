@@ -11,7 +11,7 @@
  
 - name: email it
   mail:
-    from: "{{ send_from | default(ansible_user_id + '@'ansible_fqdn) }}"
+    from: "{{ send_from | default(ansible_user_id + '@' + ansible_fqdn) }}"
     to: "{{ send_to }}"
     host: "{{ smtp_server }}"
     subject: "STS Cert expiration report {{ ansible_date_time.date }}"
