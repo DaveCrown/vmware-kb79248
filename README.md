@@ -20,7 +20,7 @@ A play to download and call VMware support's scripts to check, and if necessary 
 >- Mucking with sts signing certs can break your environment. Have backups and snapshots before begin.
 >- You're running code downloaded from the Internet, read the code first to get that warm and fuzzy feeling. 
 >- Until I can get vmware support to fix the `fixsts.sh` script, I patch the script to include a check that the `VCENTER_PASSWORD` environment variable set on the VCSA. This is done temporarily by either pulling it from the env var on your workstation or Ansible Tower server, or prompting you for it. I don't claim this script as my own, its from VMware. 
->- Tower or locally, the `administrator@vsphere.local` is passed around and unset in an environment variable. There is a possibility of it getting leaked. While this is standard operating procedure for Tower, you need to be aware of this.  
+>- Whether the play is locally or from Tower, the `administrator@vsphere.local` is passed around and unset in an environment variable. There is a possibility of it getting leaked. While this is standard operating procedure for Tower, you need to be aware of this.  
 >- I'm suggesting you generate and copy ssh keys to your vc. Understand the risks and mitigation before you do this.
 >- Beyond this point, there be dragons. Proceed at your own risk.
 >#### Notes
@@ -137,9 +137,9 @@ If you needs reports, use the `send_report=True` with `send_to=` and `smtp_serve
 | `sso_domain=<blah>` | target only one SSO domain, as defined in `vcenters.ini` |
 | `fix_sts=True` | enable automatic repair of sts signing cert |
 | `send_report=True` | Generate a report of STS cert expirations |
-| `send_to='<email addresses>'` | a list of comma separated email addresses |
+| `send_to=<email addresses>` | a list of comma separated email addresses |
 | `send_from=<some_address>` | Optionally, send from a SMTP address your SMTP server will accept from |
-| `smpt_server=< your smtp server` | SMTP server to use |
+| `smpt_server=< your smtp server>` | SMTP server to use |
 | `smtp_port=<some tcp port>` | Optionally, send to a port other than 25/tcp |
 
 ### Ansible Tower
@@ -153,6 +153,6 @@ To use the play in Tower, create a vcenter credential with a username of `admini
 [Vagrant Install Guide](https://www.vagrantup.com/intro/getting-started/install.html)  
 
 ## Legal
-I am in no away affiliated with VMware, nor did I write the scripts. I just an ansible play to run them. Use this as your own peril with good backups and snapshots. Don't blame me if this burns down your center environment, you were warned. I take no responsibility or liability.
+I am in no away affiliated with VMware, nor did I write the scripts. I just wrote an ansible play to run them. Use this as your own peril with good backups and snapshots. Don't blame me if this burns down your vcenter environment, you were warned. I take no responsibility or liability.
 
 Trademarks and Copyrights are properties of their respective owners.
