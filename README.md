@@ -31,6 +31,7 @@ A play to download and call VMware support's scripts to check, and if necessary 
 - **Backups and Snapshots**
 - A supported UNIX type OS (Linux, MacOS, etc)
 - Ansible (developed against 2.9)
+- pyVmomi python library 6.7 or later
 - vCenter 6.5 VCSA or later
 - git
 - a text editor of your choice
@@ -50,10 +51,10 @@ A play to download and call VMware support's scripts to check, and if necessary 
 Start with cloning this to your local workstation with `git clone https://github.com/DaveCrown/vmware-kb79248.git` and `cd vmware-kb79248`
 
 ### Unix
-Use your favorite package manager. See the [Ansible Installation Guide](https://docs.ansible.com/ansible/latest/installation_guide/index.html)
+Use your favorite package manager. See the [Ansible Installation Guide](https://docs.ansible.com/ansible/latest/installation_guide/index.html). You will also need the pyVmomi Python library. For some reason, the package is not a dependency for Ansible.
 
 ### Windows
-Either spin up a vm, or use the attached vagrant file to spin a Centos 7 environment. The vagrant fil will call the included `install.yml` play to configure the environment with Ansible, Git, and a few other goodies. To install Vagrant, see the [Vagrant Install Guide](https://www.vagrantup.com/intro/getting-started/install.html). You'll also need one of the aforementioned hypervisors.
+Either spin up a vm, or use the attached vagrant file to spin a Centos 7 environment. The vagrant file will call the included `install.yml` play to configure the environment with Ansible, Git, and a few other goodies. To install Vagrant, see the [Vagrant Install Guide](https://www.vagrantup.com/intro/getting-started/install.html). You'll also need one of the aforementioned hypervisors.
 
 ### Vagrant
 The included Vagrant file will spin up a Centos 7 VM, and use the `install.yml` play to install all the required software, copy all the file in this repository over to the `/vagrant` directory. Once Vagrant and a hypervisor has been installed, run `vagrant up`. Once the vmn is built, run `vagrant ssh` to log into the vm. Once in, `cd /vagrant` to get to the files. When your done, `vagrant destory` to stop and remove the vm. You can always rebuild it with `vagrant up` again
