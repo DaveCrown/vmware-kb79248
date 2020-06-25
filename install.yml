@@ -23,9 +23,7 @@
         src: '{{ item }}'
         dest: '/etc/yum.repos.d/{{ item }}'
       with_items: "{{ yum_online_repo_files }}"
-      when: 
-        - configure_repos | default( True )
-        - ansible_os_family == 'RedHat'
+      when: configure_repos | default( True )
 
     - name: Install yum repo keys
       copy:
