@@ -6,17 +6,11 @@
   when: env_vmware_password == ""
   register: vmware_password_prompt
 
-- name: get offical fixsts script
-  get_url: 
-    url: "{{ script_urls.fixsts }}"
-    dest: "{{ ansible_user_dir }}/fixsts.sh"
-    mode: '0744'
-
 - name: Download file from vmware
   block:
-    - name: get check script
+    - name: get offical fixsts script
       get_url: 
-        url: "{{ script_urls.checksts }}"
+        url: "{{ script_urls.fixsts }}"
         dest: "{{ ansible_user_dir }}/fixsts.sh"
         mode: '0744'
 
@@ -29,7 +23,7 @@
 
     - name: get check script
       get_url: 
-        url: "{{ script_urls.checksts }}"
+        url: "{{ script_urls.fixsts }}"
         dest: "{{ playbook_dir }}/work/fixsts.sh"
         mode: '0644'
       delegate_to: localhost
