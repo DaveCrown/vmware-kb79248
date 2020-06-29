@@ -10,6 +10,7 @@
       - powershell
       - git
       - yum-utils
+      - python36-pyvmomi
 
     yum_online_repo_files:
       - 'ms-pwsh.repo'
