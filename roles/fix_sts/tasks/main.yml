@@ -7,6 +7,7 @@
   register: vmware_password_prompt
 
 ### have the vcsa download the script, or user the control station to scp if fails
+
 - name: Download file from vmware
   block:
     - name: get offical fixsts script
