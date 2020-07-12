@@ -1,4 +1,5 @@
 ---
+### have the vcsa download the script, or user the control station to scp if fails
 - name: Download file from vmware
   block:
     - name: get check script
@@ -25,12 +26,14 @@
         src: "{{ playbook_dir }}/work/checksts.py"
         dest:  "{{ ansible_user_dir }}/checksts.py"
 
+### this is actually calling of checksts
 - name: run the checksts.py script
   shell:
     cmd: python {{ ansible_user_dir }}/checksts.py
   register: check_sts_results
   changed_when: False
 
+### this section is to set reporting and fix flags
 - name: set expired flag
   set_fact:
     expired_certs: True
@@ -49,6 +52,14 @@
   when: 
     - check_sts_results.stdout is regex("1\ years")
 
+- name: set run_script varible
+  set_fact:
+    run_fix: yes
+  when:
+    - (expired_certs | default(False) ) or (expiring_certs | default(False)) or ( force | default(False))
+    - fix_sts | default(False)
+
+### Output and verbose output
 - name: Output results 
   debug:
     msg: "Expired or Expiring Certs Found"
@@ -59,15 +70,9 @@
     var: check_sts_results.stdout_lines
     verbosity: 1
 
+### report generation
 - name: generate report_stubs
   include_role:
     name: generate_report_stubs
   when: 
     - send_report | default(False)
-
-- name: set run_script varible
-  set_fact:
-    run_fix: yes
-  when:
-    - (expired_certs | default(False) ) or (expiring_certs | default(False))
-    - fix_sts | default(False)
