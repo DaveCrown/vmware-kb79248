@@ -2,7 +2,6 @@
 - hosts: "{{ sso_domain | default('all') }}"
   gather_facts: yes
   become: no
-  serial: 1
   #strategy: debug
 
   vars:
@@ -11,6 +10,21 @@
       fixsts: https://kb.vmware.com/sfc/servlet.shepherd/version/download/068f400000HnqyiAAB
 
   tasks:
+    - name: make a work dir
+      file:
+        state: directory
+        path: "{{ playbook_dir }}/work"
+      delegate_to: localhost
+      changed_when: false 
+
+    - name: delete restart file 
+      file:
+        state: absent
+        path: "{{ playbook_dir }}/work/restart_{{ group_names[0] }}"
+      delegate_to: localhost
+      changed_when: false 
+      when: sts_role == 'all'  or sts_role =='master'
+
     - name: checksts
       include_role:
         name: check_sts
@@ -23,15 +37,92 @@
       - run_fix | default(false)
       - sts_role == 'all' or sts_role == 'master'
 
-    - name: restart services on all/master sts
+# cordinated reboot block
+- hosts: "{{ sso_domain | default('all') }}"
+  gather_facts: no
+  become: no
+
+  tasks:
+    - name: check for restart file
+      stat:
+        path: "{{ playbook_dir }}/work/restart_{{ group_names[0] }}"
+        get_attributes: no
+        get_checksum: no
+      delegate_to: localhost
+      register: restart_file
+      changed_when: false
+
+    - name: restart services for sts_role=all
       include_role:
         name: restart_services
       when:
-       - run_fix | default(false)
-       - sts_role == restart_group
-      with_items: "{{ restart_order }}"
-      loop_control:
-        loop_var: restart_group
+       - sts_role == "all"
+       - restart_file.stat.exists
+
+- hosts: "{{ sso_domain | default('all') }}"
+  gather_facts: no
+  become: no
+
+  tasks:
+    - name: check for restart file
+      stat:
+        path: "{{ playbook_dir }}/work/restart_{{ group_names[0] }}"
+        get_attributes: no
+        get_checksum: no
+      delegate_to: localhost
+      register: restart_file
+      changed_when: false
+
+    - name: restart services for sts_role=master
+      include_role:
+        name: restart_services
+      when:
+       - sts_role == "master"
+       - restart_file.stat.exists
+
+- hosts: "{{ sso_domain | default('all') }}"
+  gather_facts: no
+  become: no
+
+  tasks:
+    - name: check for restart file
+      stat:
+        path: "{{ playbook_dir }}/work/restart_{{ group_names[0] }}"
+        get_attributes: no
+        get_checksum: no
+      delegate_to: localhost
+      register: restart_file
+      changed_when: false
+
+    - name: restart services for sts_role=psc
+      include_role:
+        name: restart_services
+      when:
+       - sts_role == "psc"
+       - restart_file.stat.exists
+
+
+- hosts: "{{ sso_domain | default('all') }}"
+  gather_facts: no
+  become: no
+
+  tasks:
+    - name: check for restart file
+      stat:
+        path: "{{ playbook_dir }}/work/restart_{{ group_names[0] }}"
+        get_attributes: no
+        get_checksum: no
+      delegate_to: localhost
+      register: restart_file
+      changed_when: false
+
+    - name: restart services for sts_role=vcenter
+      include_role:
+        name: restart_services
+      when:
+       - sts_role == "vcenter"
+       - restart_file.stat.exists
+
 
 - hosts: localhost
   gather_facts: yes
