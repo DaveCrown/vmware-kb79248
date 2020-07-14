@@ -60,7 +60,7 @@
     path: "{{ playbook_dir }}/work/restart_{{ group_names[0] }}"
   delegate_to: localhost
   changed_when: false 
-  when: run_fix
+  when: run_fix | default(False)
 
 ### Output and verbose output
 - name: Output results 
