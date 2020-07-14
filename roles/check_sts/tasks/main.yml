@@ -8,12 +8,6 @@
         dest: "{{ ansible_user_dir }}/checksts.py"
         mode: '0644'
   rescue:
-    - name: make a work dir
-      file:
-        state: directory
-        path: "{{ playbook_dir }}/work"
-      delegate_to: localhost
-
     - name: get check script
       get_url: 
         url: "{{ script_urls.checksts }}"
@@ -58,6 +52,15 @@
   when:
     - (expired_certs | default(False) ) or (expiring_certs | default(False)) or ( force | default(False))
     - fix_sts | default(False)
+
+# creating a file to singal a restart
+- name: touch restart file 
+  file:
+    state: touch
+    path: "{{ playbook_dir }}/work/restart_{{ group_names[0] }}"
+  delegate_to: localhost
+  changed_when: false 
+  when: run_fix
 
 ### Output and verbose output
 - name: Output results 
