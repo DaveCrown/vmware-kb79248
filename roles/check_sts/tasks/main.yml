@@ -3,16 +3,16 @@
 - name: Download file from vmware
   block:
     - name: get check script
-      get_url: 
+      get_url:
         url: "{{ script_urls.checksts }}"
         dest: "{{ ansible_user_dir }}/checksts.py"
         mode: '0644'
   rescue:
     - name: get check script
-      get_url: 
+      get_url:
         url: "{{ script_urls.checksts }}"
         dest: "{{ playbook_dir }}/work/checksts.py"
-        mode: '0644'
+        mode: '0744'
       delegate_to: localhost
 
     - name: copy file to server
@@ -31,19 +31,19 @@
 - name: set expired flag
   set_fact:
     expired_certs: True
-  when: 
+  when:
     - check_sts_results.stdout is regex("[1-9]\d*\ EXPIRED\ CERTS")
 
 - name: set expiring flag
   set_fact:
     expiring_certs: True
-  when: 
+  when:
     - check_sts_results.stdout is regex("[0-1]\ \ years")
 
-- name: Output results 
+- name: Output results
   debug:
     msg: "STS Certs are expiring this year"
-  when: 
+  when:
     - check_sts_results.stdout is regex("1\ years")
 
 - name: set run_script varible
@@ -54,21 +54,21 @@
     - fix_sts | default(False)
 
 # creating a file to singal a restart
-- name: touch restart file 
+- name: touch restart file
   file:
     state: touch
     path: "{{ playbook_dir }}/work/restart_{{ group_names[0] }}"
   delegate_to: localhost
-  changed_when: false 
+  changed_when: false
   when: run_fix | default(False)
 
 ### Output and verbose output
-- name: Output results 
+- name: Output results
   debug:
     msg: "Expired or Expiring Certs Found"
   when: (expired_certs | default(False) ) or (expiring_certs | default(False))
 
-- name: Output verbose results 
+- name: Output verbose results
   debug:
     var: check_sts_results.stdout_lines
     verbosity: 1
@@ -77,5 +77,5 @@
 - name: generate report_stubs
   include_role:
     name: generate_report_stubs
-  when: 
+  when:
     - send_report | default(False)
